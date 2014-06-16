@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide9.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide11.html">next</a>
+]
+</p>
+
+<h1>FingerPrint.filterFreqBands() Part 2</h1>
+
+<ul>
+	<li>Creates a hashkey using max amplitudes (hashval)</li>
+	<li>Stores the chunk number into a hashtable using the hashkey</li>
+	<li>ChunkNum represents point in the song (time)</li>
+</ul>
+
+<hr />
+
+<pre>
+ long hashval = ((point4 * 100000) +
+                (point3 * 10000) +
+                (point2 * 100) +
+                (point1));
+
+        if (!this.getFingerprint().containsKey(hashval)) {
+            int[] approxTimes = new int[1];
+            approxTimes[0] = chunkNum;
+            this.getFingerprint().put(hashval, approxTimes);
+        } else {
+            int[] oldTimes = (int[]) this.getFingerprint().get(hashval);
+            int[] newTimes = new int[oldTimes.length + 1];
+
+            for (int i = 0; i < oldTimes.length; i++) {
+                newTimes[i] = oldTimes[i];
+            }
+            newTimes[oldTimes.length] = chunkNum;
+            this.getFingerprint().put(hashval, newTimes);
+        }
+    }
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

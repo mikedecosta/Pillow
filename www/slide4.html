@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide3.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide5.html">next</a>
+]
+</p>
+
+<h1>Main.java</h1>
+
+<hr />
+
+<pre>
+public class Main {
+    public static void main(String[] args) {  	
+        File[] files = new File[2];
+        try {
+            files = InputChecker.checkSongs(args);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+	    return;
+        }
+        FingerPrint longFP = new FingerPrint();
+        FingerPrint shortFP = new FingerPrint();
+
+        longFP.fingerPrint(files[0], true);
+        shortFP.fingerPrint(files[1], false);
+        Util.compareFingers(longFP, shortFP);
+         
+        Util.deleteWorkingFiles();
+    }
+}
+
+
+</pre>
+
+<hr />
+
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+</body>
+</html>

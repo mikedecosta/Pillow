@@ -1,0 +1,182 @@
+#!/bin/bash
+### This script runs The Pillow song matching program from command line
+### It takes in two arguments of type File
+### These files should be of type MPEG audio layer 3, or a Wave file
+### 
+###
+### Example $ ./m4500 song1.mp3 song2.wav
+###
+
+shopt -s nocasematch;
+rm -f working/*
+
+regexMp3=".*\sMPEG.*layer\sIII.*"
+regexWav=".*\sWAVE\saudio.*"
+regexTxt=".*\sASCII\stext.*"
+regexBit="16\sbit"
+
+if [[ "$1" != "" ]]; then
+	firstString=`file $1`
+else
+	echo 'error: Must have two inputs'
+	exit;
+fi
+
+if [[ "$2" != "" ]]; then
+	secondString=`file $2`
+else
+	echo 'error: Must have two inputs'
+	exit
+fi
+
+if [[ "$3" != "" ]]; then
+	echo 'error: Must have two inputs'
+	exit
+fi
+
+if [ ! -e "$1" ]; then
+	echo "error: $1 Does not exist"
+	exit
+fi
+
+if [ ! -e "$2" ]; then
+	echo "error: $2 Does not exist"
+	exit
+fi
+
+function compare {
+	##first song
+	if [ -e "$3" ]; then
+		## mp3 check
+		if [[ ! "$1" =~ $regexMp3 ]]; then
+
+			## wave check
+			if [[ "$1" =~ $regexWav ]]; then
+
+				## sample rate for wave check
+				firstSampleRate=`expr match "$1" '.*\s\([0-9]*\)\sHz.*'`
+				if [[ $firstSampleRate != "44100" && $firstSampleRate != "22050" && $firstSampleRate != "11025" ]]; then
+					echo "Error: $3 must have a sample rate of 44100, 22050, or 11025 Hz"
+					return
+				fi
+		
+				## sample rate check
+				if [[ ! "$1" =~ $regexBit ]]; then
+					echo "Error: $3 must use 16 bits per sample"
+					return
+				fi
+			else
+				echo "Error: $3 must be of type MPEG layer III or WAVE audio"
+				return
+			fi
+
+		## sample rate for mp3 check
+		else 
+			firstSampleRateKhz=`expr match "$1" '.*\s\([0-9.]*\)\skHz.*'`
+			if [[ $firstSampleRateKhz != "44.1" && $firstSampleRateKhz != "22.05" && $firstSampleRateKhz != "11.025" ]]; then
+				echo "Error: $3 must have a sample rate of 44100, 22050, or 11025 Hz"
+				return
+			fi
+
+		fi
+	else
+		echo "error: $3 Does not exist"
+		return
+	fi
+
+	##second song
+	if [ -e "$4" ]; then
+		if [[ ! "$2" =~ $regexMp3 ]]; then
+
+			## wave check
+			if [[ "$2" =~ $regexWav ]]; then
+
+				## sample rate for wave check
+				secondSampleRate=`expr match "$2" '.*\s\([0-9]*\)\sHz.*'`
+				if [[ $secondSampleRate != "44100" && $secondSampleRate != "22050" && $secondSampleRate != "11025" ]]; then
+					echo "Error: $4 must have a sample rate of 44100, 22050, or 11025 Hz"
+					return
+				fi
+		
+				## sample rate check
+				if [[ ! "$2" =~ $regexBit ]]; then
+					echo "Error: $4 must use 16 bits per sample"
+					return
+				fi
+			else
+				echo "Error: $4 must be of type MPEG layer III or WAVE audio"
+				return
+			fi
+
+		## sample rate for mp3 check
+		else
+			secondSampleRateKhz=`expr match "$2" '.*\s\([0-9.]*\)\skHz.*'`
+			if [[ $secondSampleRateKhz != "44.1" && $secondSampleRateKhz != "22.05" && $secondSampleRateKhz != "11.025" ]]; then
+				echo "Error: $4 must have a sample rate of 44100, 22050, or 11025 Hz"
+				return
+			fi
+
+		fi
+	else
+		echo "error: $4 Does not exist"
+		return
+	fi
+
+	## used to encode and decode the first argument to the right form
+	makeCannonical $3 "first" &
+
+	## used to encode and decode the second argument to the right form
+	makeCannonical $4 "second" &
+
+	wait
+
+	callJava $3 $4
+}
+
+function callJava {
+	java -cp src/flanagan.jar:src readtest.Main "$@"
+}
+
+function makeCannonical {
+	/course/cs4500wc/bin/lame -m m --resample 8 --silent $1 working/MONO$2.mp3
+	/course/cs4500wc/bin/lame --decode --silent working/MONO$2.mp3 working/$2.wav
+	rm -f working/MONO$2.mp3
+}
+
+declare -a ARRAY
+if [[ "$firstString" =~ $regexTxt ]]; then
+	let count=0
+
+	while read newline; do
+		ARRAY[$count]=$newline
+		((count++))
+	done < $1
+else
+	ARRAY[0]=$1
+fi
+
+declare -a ARRAY2
+if [[ "$secondString" =~ $regexTxt ]]; then
+	let count=0
+
+	while read newline; do
+		ARRAY2[$count]=$newline
+		((count++))
+	done < $2
+else
+	ARRAY2[0]=$2
+fi
+
+NUMELEMENTS=${#ARRAY[@]}
+NUMELEMENTS2=${#ARRAY2[@]}
+for ((i=0; i < $NUMELEMENTS; i++));do
+	for ((j=0; j < $NUMELEMENTS2; j++));do
+		if [ ! -z "${ARRAY[i]}" ] && [ ! -z "${ARRAY2[j]}" ];then	
+			song1=`file ${ARRAY[i]}`	
+			song2=`file ${ARRAY2[j]}`
+			compare "$song1" "$song2" ${ARRAY[i]} ${ARRAY2[j]}
+		else
+			echo "error: One of the files is null"
+		fi
+	done
+done

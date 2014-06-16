@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide5.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide7.html">next</a>
+]
+</p>
+
+<h1>Song.java</h1>
+
+<hr/>
+
+<pre>
+import javax.sound.sampled.AudioInputStream;
+
+public class Song {
+    private int bytesPerFrame; //= audioInputStream.getFormat().getFrameSize();
+    private long fileSize; //= audioInputStream.getFrameLength() * bytesPerFrame;
+    private float bytesFrame; //= (bytesPerFrame * audioInputStream.getFormat().getFrameRate());
+    private float songTimeLength; //= (fileSize / bytesFrame);
+    private int bytesPerSecond;// = (int) ((fileSize - 44) / songTimeLength);
+    private int chunkSize; //= size of FFT chunk
+    private int numChunks;//= (int) fileSize / numBytes      
+    
+    
+    public Song(AudioInputStream ais) {
+    	this.bytesPerFrame = ais.getFormat().getFrameSize();
+    	this.fileSize = ais.getFrameLength() * this.bytesPerFrame;
+    	this.bytesFrame = this.bytesPerFrame * ais.getFormat().getFrameRate();
+    	this.songTimeLength = this.fileSize / this.bytesFrame;
+    	this.bytesPerSecond = (int)((this.fileSize - 44) / this.songTimeLength);
+    	this.chunkSize = (int)(1024);
+    	this.numChunks = (int)(this.fileSize) / this.chunkSize;
+    }
+    
+...
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

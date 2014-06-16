@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide10.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide12.html">next</a>
+]
+</p>
+
+<h1>Util.compareFingers</h1>
+
+<ul>
+	<li>Enumerrates through smaller Fingerprint Hashtable keys</li>
+	<li>Foreach key that is in the larger Fingerprint Hashtable...
+		<ul>
+			<li>Compute the difference of the hashvalues (times)</li>
+			<li>Store that value in an array (deltas)</li>
+		</ul>
+	</li>
+	<li>Call determineMatch(deltas)</li>
+</ul>
+
+<hr />
+
+<pre>
+    public static void compareFingers(FingerPrint longFP, FingerPrint shortFP) {
+        ArrayList deltas = new ArrayList();
+
+        Enumeration e = shortFP.getFingerprint().keys();
+        while (e.hasMoreElements()) {
+            Object hashval = e.nextElement();
+
+            if (longFP.getFingerprint().containsKey(hashval)) {
+                int[] longs = (int[]) longFP.getFingerprint().get(hashval);
+                int[] shorts = (int[]) shortFP.getFingerprint().get(hashval);
+                for (int i = 0; i < longs.length; i++) {
+                    for (int j = 0; j < shorts.length; j++) {
+                        int timeDiff = Math.abs((int) longs[i] - (int) shorts[j]);
+                        deltas.add((int) timeDiff);
+                    }
+                }
+            }
+
+        }
+        determineMatch(deltas);
+    }
+
+</pre>
+
+<hr />
+
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+</body>
+</html>
+

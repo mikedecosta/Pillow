@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide2.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide4.html">next</a>
+]
+</p>
+
+<h1>M4500 Bash Script Part 2</h1>
+
+<hr />
+
+<pre>
+##first song
+## mp3 check
+if [[ ! "$firstString" =~ $regexMp3 ]]; then
+
+	## wave check
+	if [[ "$firstString" =~ $regexWav ]]; then
+
+		## sample rate for wave check
+		firstSampleRate=`expr match "$firstString" '.*\s\([0-9]*\)\sHz.*'`
+		if [[ $firstSampleRate != "44100" && $firstSampleRate != "22050" && $firstSampleRate != "11025" ]]; then
+			echo "Error: $1 must have a sample rate of 44100, 22050, or 11025 Hz"
+			exit
+		fi
+		
+		## bits per sample check
+		if [[ ! "$firstString" =~ $regexBit ]]; then
+			echo "Error: $1 must use 16 bits per sample"
+			exit
+		fi
+	else
+		echo "Error: $1 must be of type MPEG layer III or WAVE audio"
+		exit
+	fi
+
+## sample rate for mp3 check
+else 
+	firstSampleRateKhz=`expr match "$firstString" '.*\s\([0-9.]*\)\skHz.*'`
+	if [[ $firstSampleRateKhz != "44.1" && $firstSampleRateKhz != "22.05" && $firstSampleRateKhz != "11.025" ]]; then
+		echo "Error: $1 must have a sample rate of 44100, 22050, or 11025 Hz"
+		exit
+	fi
+
+fi
+
+...
+
+## used to encode and decode the first argument to the right form
+	/course/cs4500wc/bin/lame -m m $samplerate --silent $1 working/MONOfirst.mp3
+	/course/cs4500wc/bin/lame --decode --silent working/MONOfirst.mp3 working/first.wav
+	rm -f working/MONOfirst.mp3
+
+...
+
+java -cp src/flanagan.jar:src readtest.Main "$@"
+
+</pre>
+
+<hr />
+
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+</body>
+</html>
+

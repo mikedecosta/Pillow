@@ -1,0 +1,83 @@
+/* Modified (with permission) from Mitch Wand's csg111.css */
+
+body           { background-color: #e8e8e8;
+		 font-family:  "Times New Roman", Times, Georgia, serif; 
+	         font-size: 12pt;
+	         margin: 3%;
+                 }
+
+td             { background-color: #d8d8d8;
+		 font-family:  "Times New Roman", Times, Georgia, serif; 
+	         font-size: 12pt;
+	         margin: 3%;
+                 padding: 5px;
+                 }
+
+table          { background-color: #808080; }
+
+body {min-width:640px}
+
+/* alternative fonts */
+/* Verdana, Arial, sans-serif; */
+/* Georgia, "Times New Roman", Times, serif; */
+
+/* tt,kbd,code {font-size: 11pt;} */
+tt,kbd,code {font-size: 11pt;}
+
+/* code blocks have a slightly darker background */
+
+pre     {font-size: 11pt; background-color: #d8d8d8;}
+
+address {font-size: 10pt;}
+
+/* put some padding after each li */
+/* no, let's not */
+/* li {padding-bottom: 10pt} */
+li {padding-bottom: 10pt}
+
+
+/* divs */
+
+#banner {padding: 0px; text-align: center;}
+#menu {
+  float:left;
+  width:20%;
+}
+#content {
+  float:right;
+  width:75%
+}
+
+#quotation {padding: 10px;
+            margin-left: 20px;
+            width:80%;
+            background-color: #d8d8d8;}
+
+#footer {clear:both; width:100%} /* safari and opera need this */
+#fullwidth {clear:both; width:100%}
+#spacer {clear:both; width:100%}
+
+#footer {clear:both}
+
+/* classes */
+
+.bigcenter { font-size:250%; text-align: center; }
+
+.bigger { font-size:150%; }
+
+.bigcode { background-color: #d8d8d8; font-size:80%; }
+
+.center { text-align: center; }
+
+.darker { background-color: #d0d0d8; }
+
+.bright {
+        color: #FF0000;
+        font-weight: bold;
+}
+
+.dull {
+        color: #808080;
+}
+
+

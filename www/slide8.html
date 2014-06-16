@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide7.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide9.html">next</a>
+]
+</p>
+
+<h1>FingerPrint.fingerPrint() Part 2</h1>
+
+<ul>
+	<li>Apply Hann window to chunks of byte data</li>
+	<li>Convert byte array to an array of complex numbers </li>
+	<li>Complex number array is passed to the Flanagan FFT</li>
+	<li>Call FingerPrint.filterFreqBands to make song fingerprint</li>
+	<li>Looping through data is done using an overlap of 75%</li>
+</ul>
+<hr />
+
+<pre>
+...
+
+		int arrayLoc = 45; // start array after header
+                Complex[] complexArray = new Complex[song.getChunkSize()];
+                double hannByte;
+                int fftNumChunk = 0;
+                while ((arrayLoc + song.getChunkSize()) < (chunkNum * song.getChunkSize())) {
+                    for (int i = 0; i < song.getChunkSize(); i++) {
+                        double multiplier = 0.5 * (1 - Math.cos(2 * Math.PI * i / song.getChunkSize()));
+                        hannByte = multiplier * allSong[arrayLoc + i];
+                        complexArray[i] = new Complex(hannByte, 0);
+                    }
+                    ft.setData(complexArray);
+                    ft.transform();
+                    complexArray = ft.getTransformedDataAsComplex();
+                    filterFreqBands(complexArray,fftNumChunk);
+                    arrayLoc = arrayLoc + (song.getChunkSize() / 4); // Overlapping data
+                    fftNumChunk++;
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide4.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide6.html">next</a>
+]
+</p>
+
+<h1>InputChecker.java</h1>
+
+<hr />
+
+<pre>
+
+public class InputChecker {
+
+    public static File[] checkSongs(String[] args) throws Exception {
+        int numInputs = args.length;
+            
+        File first = new File("working/first.wav");
+        File second = new File("working/second.wav");
+
+	if(!first.exists() || !second.exists()){
+		throw new Exception("error: One or more of the working input files does not exist.");
+	}
+            
+	// make sure the first song is the longer of the two
+        if(first.length() < second.length()){
+            File temp = first;
+            first = second;
+            second = temp;
+        }
+
+        File[] files = new File[2];
+        files[0] = first;
+        files[1] = second;
+           
+	return files;
+    }
+}
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

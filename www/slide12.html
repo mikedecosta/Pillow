@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide11.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide13.html">next</a>
+]
+</p>
+
+<h2>Util.determineMatch(ArrayList deltas)</h2>
+<ul>
+	<li>Loops through deltas array</li>
+	<li>Uses each value as a key in a hashtable (binCount) that stores the number of times that key appears in the deltas array</li>
+	<li>Accumulate the largest bin in that hashtable (tempCount) as we loop through</li>
+	<li>Based on largest bin print out "yes" or "no" and a confidence threshold</li>
+</ul>
+
+<hr />
+
+<pre>
+    public static boolean determineMatch(ArrayList deltas) {
+        Hashtable binCount = new Hashtable();
+        int tempCount;
+        boolean match = false;
+        String threshold = "100%";
+        int largestCount = 0;
+
+        for (int i = 0; i < deltas.size(); i++) {
+			if(largestCount > 35){
+				break;
+			}
+            if (binCount.containsKey(deltas.get(i))) {
+                tempCount = (Integer) binCount.get(deltas.get(i));
+                tempCount++;
+                binCount.put(deltas.get(i), tempCount);
+                largestCount = largestCount < tempCount ? tempCount : largestCount;
+            } else {
+                binCount.put(deltas.get(i), 1);
+                largestCount = largestCount < 1 ? 1 : largestCount;
+            }
+        }
+
+	String outcome = largestCount > 35 ? "yes" : "no";
+        System.out.println(outcome + " (" + threshold + " confidence)"); 
+        return true;
+    }
+	
+</pre>
+
+<h2>Util.deleteWorkingFiles()</h2>
+<ul>
+	<li>Deletes two files in /working directory</li>
+</ul>
+
+<pre>
+
+    // Deletes temp files created by lame encodes/decodes
+    public static void deleteWorkingFiles() {
+        File first = new File("working/first.wav");
+        File second = new File("working/second.wav");
+
+        first.delete();
+        second.delete();
+    }
+
+</pre>
+
+<hr />
+
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+</body>
+</html>
+

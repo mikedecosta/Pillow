@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide6.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide8.html">next</a>
+]
+</p>
+
+<h1>FingerPrint.fingerPrint() Part 1</h1>
+
+<ul>
+	<li>Read in audio data using while loop</li>
+	<li>Store in a byte array (audioBytes) each iteration</li>
+	<li>Append audioBytes to full song array (allSong)</li>
+	
+</ul>
+
+<hr />
+
+<pre>
+    public void fingerPrint(File fileIn, boolean isLongSong) {
+        int totalFramesRead = 0;
+
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileIn);
+            Song song = new Song(audioInputStream);
+
+            if (song.getBytesPerFrame() == AudioSystem.NOT_SPECIFIED) {
+                // Set byte frame to 1 if not specified
+                song.setBytesPerFrame(1);
+            }
+
+            int chunksAllowed;
+            if (isLongSong) {
+                chunksAllowed = song.getNumChunks();
+            } else {
+                chunksAllowed = 22000;
+            }
+
+            byte[] audioBytes = new byte[song.getChunkSize()];
+            byte[] allSong = new byte[(int) song.getChunkSize() * chunksAllowed];
+
+            int chunkNum = 0;
+
+            try {
+                int numBytesRead = 0;
+                int numFramesRead = 0;
+                FourierTransform ft = new FourierTransform();
+                // Try to read numBytes bytes from the file.
+                while ((numBytesRead = audioInputStream.read(audioBytes)) != -1 && chunkNum < chunksAllowed) {
+                    numFramesRead = numBytesRead / song.getBytesPerFrame();
+                    totalFramesRead += numFramesRead;
+
+                    for (int i = 0; i < song.getChunkSize(); i++) {
+
+                        if (chunkNum < song.getNumChunks()) {
+                            allSong[(chunkNum * song.getChunkSize()) + i] = audioBytes[i];
+                        }
+                    }
+                    chunkNum++;
+
+                }
+...
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

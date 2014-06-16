@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide8.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide10.html">next</a>
+]
+</p>
+
+<h1>FingerPrint.filterFreqBands() Part 1</h1>
+
+<ul>
+	<li>Finds max amplitudes within 4 hard coded frequency ranges (point1-point4)</li>
+</ul>
+
+<hr />
+
+<pre>
+
+    public void filterFreqBands(Complex[] transformedArray, int chunkNum) {
+        int point1 = 0;
+        int point2 = 0;
+        int point3 = 0;
+        int point4 = 0;
+
+        for (int j = 25; j <= 256; j++) {
+            int freq = (int) transformedArray[j].abs();
+            if (j < 42) {
+                if (transformedArray[point1].abs() < freq || point1 == 0) {
+                    point1 = j;
+                }
+            } else if (j < 74) {
+                if (transformedArray[point2].abs() < freq || point2 == 0) {
+                    point2 = j;
+                }
+            } else if (j < 137) {
+                if (transformedArray[point3].abs() < freq || point3 == 0) {
+                    point3 = j;
+                }
+            } else {
+                if (transformedArray[point4].abs() < freq || point4 == 0) {
+                    point4 = j;
+                }
+            }
+        }
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Code Review: Pillow Music Matcher</title>
+
+<link type="text/css"
+      rel="stylesheet"
+      href="pillow.css"/>
+
+</head>
+
+<body>
+
+<p class="center">
+[
+
+<a href="slide1.html">previous</a>
+|
+<a href="index.html">index</a>
+|
+<a href="slide3.html">next</a>
+]
+</p>
+
+<h1>m4500 bash script</h1>
+
+<ul>
+	<li>Checking number of inputs</li>
+	<li>Checking file existance</li>
+	<li>Asserting acceptable song format</li>
+	<li>Converting to canonical MONO WAVE 8kHz Sampling Rate</li>
+	<li>Store files in /working directory</li>
+	<li>Call java Main function</li>
+</ul>
+
+<hr />
+
+<pre>
+#!/bin/bash
+
+shopt -s nocasematch;
+rm -f working/*
+
+regexMp3=".*\sMPEG.*layer\sIII.*"
+regexWav=".*\sWAVE\saudio.*"
+regexBit="16\sbit"
+samplerate="--resample 8"
+
+if [[ "$1" != "" ]]; then
+	firstString=`file $1`
+else
+	echo 'error: Must have two inputs'
+	exit;
+fi
+
+...
+
+if [ ! -e "$1" ]; then
+	echo "error: $1 Does not exist"
+	exit
+fi
+
+...
+
+</pre>
+
+<hr />
+<span>Site design and styling attributed to <a href="http://ccs.neu.edu/course/cs4500wc">neu cs4500wc website</span>
+
+</body>
+</html>
+
