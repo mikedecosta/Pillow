@@ -15,9 +15,6 @@ School project similar to Shazam
 '------------''---------''------------''------------''------------''--------------'
 ```
 
-
- ~~README~~
-
  ~~ Info ~~
 
 	Authors: Joeseph Presto, Michael DeCosta, Bryan Pelland
