@@ -45,7 +45,6 @@ School project similar to Shazam
 		song1.mp3
 		song2.mp3
 
-	NOTE: the period '.' is required before /m4500 on the ccis linux machines
 	NOTE: Pillow must have Read access on song and text files to run
 
 		$ ./m4500 song1.wav song2.wav
