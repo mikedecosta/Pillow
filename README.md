@@ -1,7 +1,7 @@
 Pillow
 ======
 
-School project similar to Shazam
+School project similar to Shazam written in Java
 
 ```
 .------------..---------..------------..------------..------------..--------------.
